@@ -49,10 +49,7 @@ const Results = () => {
     // Fetch sessions
     let query = supabase
       .from("test_sessions")
-      .select(`
-        *,
-        profiles:student_id (full_name, email)
-      `)
+      .select("*")
       .eq("status", "submitted")
       .order("created_at", { ascending: false });
 
@@ -60,9 +57,24 @@ const Results = () => {
       query = query.eq("student_id", user.id);
     }
 
-    const { data } = await query;
-    if (data) {
-      setSessions(data as any);
+    const { data: sessionsData } = await query;
+    
+    if (sessionsData && sessionsData.length > 0) {
+      // Fetch profiles for all student IDs
+      const studentIds = [...new Set(sessionsData.map(s => s.student_id))];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", studentIds);
+      
+      // Map profiles to sessions
+      const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+      const sessionsWithProfiles = sessionsData.map(session => ({
+        ...session,
+        profiles: profilesMap.get(session.student_id) || null
+      }));
+      
+      setSessions(sessionsWithProfiles as any);
     }
     setLoading(false);
   };
