@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BookOpen, Download, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { AIFeedback } from "@/components/AIFeedback";
 
 interface TestSession {
   id: string;
@@ -90,9 +91,9 @@ const Results = () => {
   };
 
   const getScoreBadge = (score: number) => {
-    if (score >= 80) return <Badge className="bg-green-500">Excellent</Badge>;
-    if (score >= 60) return <Badge className="bg-blue-500">Good</Badge>;
-    if (score >= 40) return <Badge className="bg-yellow-500">Average</Badge>;
+    if (score >= 80) return <Badge className="bg-success text-success-foreground">Excellent</Badge>;
+    if (score >= 60) return <Badge className="bg-info text-info-foreground">Good</Badge>;
+    if (score >= 40) return <Badge className="bg-warning text-warning-foreground">Average</Badge>;
     return <Badge variant="destructive">Needs Improvement</Badge>;
   };
 
@@ -124,7 +125,12 @@ const Results = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 space-y-6">
+        {/* AI Feedback for latest result - Students only */}
+        {!isAdmin && sessions.length > 0 && (
+          <AIFeedback sessionId={sessions[0].id} score={sessions[0].score} />
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>{isAdmin ? "All Test Results" : "My Test Results"}</CardTitle>

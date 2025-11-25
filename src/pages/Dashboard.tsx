@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { BookOpen, LogOut, PlayCircle, BarChart3 } from "lucide-react";
+import { AIQuestionGenerator } from "@/components/AIQuestionGenerator";
 import { User } from "@supabase/supabase-js";
 
 const Dashboard = () => {
@@ -109,18 +110,24 @@ const Dashboard = () => {
           </Card>
 
           {isAdmin && (
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin")}>
-              <CardHeader>
-                <BookOpen className="h-10 w-10 text-primary mb-2" />
-                <CardTitle>Manage Questions</CardTitle>
-                <CardDescription>
-                  Add, edit, or delete MCQ questions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">Manage</Button>
-              </CardContent>
-            </Card>
+            <>
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin")}>
+                <CardHeader>
+                  <BookOpen className="h-10 w-10 text-primary mb-2" />
+                  <CardTitle>Manage Questions</CardTitle>
+                  <CardDescription>
+                    Add, edit, or delete MCQ questions
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="outline" className="w-full">Manage</Button>
+                </CardContent>
+              </Card>
+              
+              <div className="md:col-span-2">
+                <AIQuestionGenerator />
+              </div>
+            </>
           )}
         </div>
       </div>
