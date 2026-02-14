@@ -147,6 +147,16 @@ const Test = () => {
   const handleSubmit = async () => {
     if (!sessionId) return;
 
+    // Check if all questions are answered
+    const unanswered = questions.filter(q => !answers[q.id]);
+    if (unanswered.length > 0) {
+      toast.error(`Please answer all questions. ${unanswered.length} question(s) remaining.`);
+      // Navigate to first unanswered question
+      const firstUnansweredIdx = questions.findIndex(q => !answers[q.id]);
+      setCurrentIndex(firstUnansweredIdx);
+      return;
+    }
+
     // Calculate score
     const { data: answersData } = await supabase
       .from("test_answers")
